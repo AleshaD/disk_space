@@ -16,6 +16,10 @@ public class SwiftDiskSpacePlugin: NSObject, FlutterPlugin {
         result(UIDevice.current.totalDiskSpaceInMB)
     case "getFreeDiskSpaceForPath":
         result(UIDevice.current.freeDiskSpaceForPathInMB(path: (call.arguments as? [String: String])!["path"]!))
+    case "getCacheSize":
+        result(UIDevice.current.cacheSizeInBytes)
+    case "clearCache":
+        result(UIDevice.current.clearCache())
     default:
         result(0.0)
     }
@@ -36,9 +40,21 @@ extension UIDevice {
     var usedDiskSpaceInMB:Double {
         return Double(usedDiskSpaceInBytes / (1024 * 1024))
     }
+
+    var cacheSizeInBytes:Int {
+        let urlCache = URLCache.shared
+        return Int(urlCache.currentDiskUsage);        
+    }
     
     public func freeDiskSpaceForPathInMB(path: String) -> Double {
         return Double(freeDiskSpaceForPathInBytes(path: path) / (1024 * 1024))
+    }
+
+    public func clearCache() -> Double {
+        let urlCache = URLCache.shared
+        urlCache.removeAllCachedResponses()
+
+        return -1
     }
     
     

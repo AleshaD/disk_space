@@ -1,10 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
 import 'package:disk_space/disk_space.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 void main() => runApp(MyApp());
@@ -15,7 +13,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  double _diskSpace = 0;
+  double? _diskSpace = 0;
   Map<Directory, double> _directorySpace = {};
 
   @override
@@ -25,7 +23,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initDiskSpace() async {
-    double diskSpace = 0;
+    double? diskSpace = 0;
 
     diskSpace = await DiskSpace.getFreeDiskSpace;
 
@@ -41,12 +39,12 @@ class _MyAppState extends State<MyApp> {
         (list) async => list ?? [await getApplicationDocumentsDirectory()],
       );
     } else {
-      return [];
+      return;
     }
 
     for (var directory in directories) {
       var space = await DiskSpace.getFreeDiskSpaceForPath(directory.path);
-      directorySpace.addEntries([MapEntry(directory, space)]);
+      directorySpace.addEntries([MapEntry(directory, space ?? 0)]);
     }
 
     if (!mounted) return;

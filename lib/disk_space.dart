@@ -11,6 +11,16 @@ class DiskSpace {
     return version;
   }
 
+  static Future<int?> get getCacheSize async {
+    final int? cacheSize = await _channel.invokeMethod('getCacheSize');
+
+    return cacheSize;
+  }
+
+  static Future<void> clearCache() async {
+    await _channel.invokeMethod('clearCache');
+  }
+
   static Future<double?> get getFreeDiskSpace async {
     final double? freeDiskSpace =
         await _channel.invokeMethod('getFreeDiskSpace');
